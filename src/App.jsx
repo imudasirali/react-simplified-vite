@@ -1,6 +1,11 @@
+import Counter from "./components/Counter"
+import CounterClass from "./components/CounterClass"
+
 function App() {
 
-  return 'Hello World!'
+  return (
+    <CounterClass></CounterClass>
+  )
 }
 
 export default App
