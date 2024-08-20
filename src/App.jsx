@@ -1,6 +1,13 @@
-function App() {
+import Person from "./Person";
+import PersonClass from "./PersonClass";
 
-  return 'Hello World!'
+function App() {
+  return (
+    <div>
+      <Person />
+      <PersonClass />
+    </div>
+  );
 }
 
-export default App
+export default App;
