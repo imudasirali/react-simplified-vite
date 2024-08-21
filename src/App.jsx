@@ -1,6 +1,17 @@
-function App() {
+import { useState } from "react"
+import { ChildClass } from "./ChildClass"
 
-  return 'Hello World!'
+export default function App() {
+  const [show, setShow] = useState(true)
+
+  const childComponent = show ? <ChildClass /> : null
+
+  return (
+    <div>
+      <button onClick={() => setShow(currentShow => !currentShow)}>
+        Show/Hide
+      </button>
+      {childComponent}
+    </div>
+  )
 }
-
-export default App
