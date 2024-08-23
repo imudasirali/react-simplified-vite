@@ -1,8 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { DisplayString } from "./DisplayString";
 
-export default function Person() {
-  const [name, setName] = useState("Mudasir Function");
-  const [age, setAge] = useState(31);
+export default function Person({
+  myname = "Nobody Doe",
+  myage = 0,
+  favouriteNumber,
+}) {
+  const [name, setName] = useState(myname);
+  const [age, setAge] = useState(myage);
+  useEffect(() => {
+    document.title = name;
+  }, [name]);
 
   function handleChange(e) {
     setName(e.target.value);
@@ -24,9 +32,10 @@ export default function Person() {
       <button onClick={decreaseAge}>-</button>
       <span> {age} </span>
       <button onClick={increaseAge}>+</button>
-      <p>
-        My name is {name} and I am {age} years old.
-      </p>
+      <br />
+      <br />
+      {favouriteNumber != null && `My favourite number is ${favouriteNumber}`}
+      <DisplayString name={name} age={age} />
     </div>
   );
 }

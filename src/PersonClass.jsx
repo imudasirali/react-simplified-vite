@@ -1,4 +1,5 @@
 import React from "react";
+import { DisplayString } from "./DisplayString";
 
 export default class PersonClass extends React.Component {
   constructor(props) {
@@ -8,6 +9,11 @@ export default class PersonClass extends React.Component {
       age: 31,
     };
   }
+
+  componentDidUpdate() {
+    document.title = this.state.name;
+  }
+
   render() {
     const handleChange = (e) => {
       this.setState({ name: e.target.value });
@@ -32,9 +38,7 @@ export default class PersonClass extends React.Component {
         <button onClick={decreaseAge}>-</button>
         <span> {this.state.age} </span>
         <button onClick={increaseAge}>+</button>
-        <p>
-          My name is {this.state.name} and I am {this.state.age} years old.
-        </p>
+        <DisplayString name={this.state.name} age={this.state.age} />
       </div>
     );
   }
