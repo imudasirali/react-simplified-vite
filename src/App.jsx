@@ -5,8 +5,10 @@ import TodoItem from "./TodoItem";
 function App() {
   const [newTodo, setNewTodo] = useState("");
   const [todoList, setTodoList] = useState([]);
+  const [newText, setNewText] = useState("This is a text area");
 
-  function addNewTodo() {
+  function addNewTodo(e) {
+    e.preventDefault();
     if (newTodo == "") return;
     setTodoList((currentState) => {
       return [
@@ -30,6 +32,10 @@ function App() {
       return currentState.filter((todo) => todo.id != todoId);
     });
   }
+
+  function setSelectValue(e) {
+    console.log(e.target.value);
+  }
   return (
     <>
       <ul id="list">
@@ -44,7 +50,7 @@ function App() {
           );
         })}
       </ul>
-      <div id="new-todo-form">
+      <form onSubmit={addNewTodo} id="new-todo-form">
         <label htmlFor="todo-inout">New Todo</label>
         <input
           type="text"
@@ -52,8 +58,17 @@ function App() {
           onChange={(e) => setNewTodo(e.target.value)}
           id="todo-input"
         />
-        <button onClick={addNewTodo}>Add Todo</button>
-      </div>
+        <button>Add Todo</button>
+        <textarea
+          onChange={(e) => setNewText(e.target.value)}
+          value={newText}
+        ></textarea>
+        <select onChange={setSelectValue} defaultValue={3}>
+          <option value={1}>1</option>
+          <option value={2}>2</option>
+          <option value={3}>3</option>
+        </select>
+      </form>
     </>
   );
 }
