@@ -1,6 +1,7 @@
-function App() {
+import Counter from "./Counter";
 
-  return 'Hello World!'
+function App() {
+  return <Counter />;
 }
 
-export default App
+export default App;
