@@ -1,4 +1,9 @@
-import { createBrowserRouter, Outlet } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Outlet,
+  redirect,
+  useNavigation,
+} from "react-router-dom";
 import { Home } from "./pages/Home";
 import { About } from "./pages/About";
 import { Store } from "./pages/Store";
@@ -18,12 +23,29 @@ export const router = createBrowserRouter([
       {
         path: "/team",
         element: <TeamNavLayout />,
+        loader: ({ request: { signal } }) => {
+          return fetch("https://jsonplaceholder.typicode.com/users", {
+            signal,
+          });
+        },
         children: [
           {
             index: true,
             element: <Team />,
           },
-          { path: "mudasir", element: <TeamMember name="Mudasir" /> },
+          {
+            path: ":memberId",
+            loader: ({ params, request: { signal } }) => {
+              return fetch(
+                `https://jsonplaceholder.typicode.com/users/${params.memberId}`,
+                { signal }
+              ).then((res) => {
+                if (res.status == 200) return res.json();
+                throw redirect("/team");
+              });
+            },
+            element: <TeamMember />,
+          },
         ],
       },
     ],
@@ -31,10 +53,11 @@ export const router = createBrowserRouter([
 ]);
 
 function NavLayout() {
+  const { state } = useNavigation();
   return (
     <>
       <Navbar />
-      <Outlet />
+      {state === "loading" ? <h1>Loading</h1> : <Outlet />}
     </>
   );
 }
