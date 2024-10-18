@@ -2,24 +2,17 @@ import { NavLink } from "react-router-dom";
 
 export function Navbar() {
   return (
-    <nav>
-      <ul>
+    <nav className="top-nav">
+      <div className="nav-text-large">My App</div>
+      <ul className="nav-list">
         <li>
           <NavLink to="/">Home</NavLink>
         </li>
         <li>
-          <NavLink to="/about">About</NavLink>
+          <NavLink to="/users">Users</NavLink>
         </li>
         <li>
-          <NavLink to="/store">Store</NavLink>
-        </li>
-        <li>
-          <NavLink to="/team" end>
-            Team
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/team/mudasir">Mudasir</NavLink>
+          <NavLink to="/todos">Todos</NavLink>
         </li>
       </ul>
     </nav>
