@@ -1,7 +1,8 @@
 import { useLoaderData } from "react-router-dom";
 import { User } from "../components/User";
+import { contentLoader } from "../loaders";
 
-export function Users() {
+function Users() {
   const users = useLoaderData();
   return (
     <>
@@ -21,3 +22,9 @@ export function Users() {
     </>
   );
 }
+
+const loader = contentLoader("users");
+export const UsersRoute = {
+  loader,
+  element: <Users />,
+};

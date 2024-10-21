@@ -4,7 +4,14 @@ function SinglePost() {
   console.log(singlePost);
   return (
     <>
-      <h1 className="page-title">{singlePost.title}</h1>
+      <h1 className="page-title">
+        {singlePost.title}
+        <div className="title-btns">
+          <Link className="btn btn-outline" to={`/posts/${singlePost.id}/edit`}>
+            Edit
+          </Link>
+        </div>
+      </h1>
       <span className="page-subtitle">
         By: <Link to={`/users/${user.id}`}> {user.name}</Link>
       </span>

@@ -1,7 +1,8 @@
 import { useLoaderData } from "react-router-dom";
 import { TodoItem } from "../components/TodoItem";
+import { contentLoader } from "../loaders";
 
-export function Todos() {
+function Todos() {
   const todos = useLoaderData();
   return (
     <>
@@ -14,3 +15,9 @@ export function Todos() {
     </>
   );
 }
+
+const loader = contentLoader("todos");
+export const TodosRoute = {
+  loader,
+  element: <Todos />,
+};

@@ -5,8 +5,8 @@ import {
   useNavigation,
 } from "react-router-dom";
 import { PostsRoute } from "./pages/Posts";
-import { Users } from "./pages/Users";
-import { Todos } from "./pages/Todos";
+import { UsersRoute } from "./pages/Users";
+import { TodosRoute } from "./pages/Todos";
 import { Navbar } from "./Navbar";
 import { SingleUserRoute } from "./pages/SingleUser";
 import { SinglePostRoute } from "./pages/SinglePost";
@@ -36,12 +36,7 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Users />,
-            loader: ({ request: { signal } }) => {
-              return fetch("https://jsonplaceholder.typicode.com/users", {
-                signal,
-              });
-            },
+            ...UsersRoute,
           },
           {
             path: ":userId",
@@ -51,12 +46,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/todos",
-        loader: ({ request: { signal } }) => {
-          return fetch("https://jsonplaceholder.typicode.com/todos", {
-            signal,
-          });
-        },
-        element: <Todos />,
+        ...TodosRoute,
       },
       { path: "*", element: <h1>404 - Page Not Found</h1> },
     ],
