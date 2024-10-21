@@ -1,12 +1,39 @@
-import { useLoaderData } from "react-router-dom";
+import { Form, Link, useLoaderData, useNavigation } from "react-router-dom";
 import { TodoItem } from "../components/TodoItem";
-import { contentLoader } from "../loaders";
+import { useEffect, useRef } from "react";
 
 function Todos() {
-  const todos = useLoaderData();
+  const {
+    searchParams: { query },
+    todos,
+  } = useLoaderData();
+  const searchRef = useRef();
+  const { state } = useNavigation();
+
+  useEffect(() => {
+    searchRef.current.value = query;
+  }, [query]);
   return (
     <>
-      <h1 className="page-title">Todos</h1>
+      <h1 className="page-title">
+        Todos
+        <div className="title-btns">
+          <Link className="btn btn-outline" to="/todos/new">
+            New
+          </Link>
+        </div>
+      </h1>
+      <Form className="form">
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="query">Search</label>
+            <input type="search" name="query" id="query" ref={searchRef} />
+          </div>
+          <button className="btn">
+            {state === "loading" ? "Loading" : "Search"}
+          </button>
+        </div>
+      </Form>
       <ul>
         {todos.map((todo) => (
           <TodoItem key={todo.id} {...todo} />
@@ -16,7 +43,16 @@ function Todos() {
   );
 }
 
-const loader = contentLoader("todos");
+const loader = async function loader({ request: { signal, url } }) {
+  const searchParams = new URL(url).searchParams;
+  const query = searchParams.get("query") || "";
+  return {
+    searchParams: { query },
+    todos: await fetch(`http://127.0.0.1:3000/todos/?q=${query}`, {
+      signal,
+    }).then((res) => res.json()),
+  };
+};
 export const TodosRoute = {
   loader,
   element: <Todos />,

@@ -6,7 +6,7 @@ export function Navbar() {
       <div className="nav-text-large">My App</div>
       <ul className="nav-list">
         <li>
-          <NavLink to="/">Home</NavLink>
+          <NavLink to="/">Posts</NavLink>
         </li>
         <li>
           <NavLink to="/users">Users</NavLink>

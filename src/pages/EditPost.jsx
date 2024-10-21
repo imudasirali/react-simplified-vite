@@ -7,7 +7,7 @@ export function EditPost() {
           <div className="form-group error">
             <label htmlFor="title">Title</label>
             <input type="text" name="title" id="title" />
-            <div className="error-message">Required</div>
+            {/* <div className="error-message">Required</div> */}
           </div>
           <div className="form-group">
             <label htmlFor="userId">Author</label>
