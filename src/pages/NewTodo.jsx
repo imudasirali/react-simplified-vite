@@ -1,6 +1,12 @@
-import { Form, Link, useActionData, useNavigation } from "react-router-dom";
+import {
+  Form,
+  Link,
+  redirect,
+  useActionData,
+  useNavigation,
+} from "react-router-dom";
 
-export function NewTodo() {
+function NewTodo() {
   const errorMessage = useActionData();
   const { state } = useNavigation();
   const isSubmitting = state === "submitting" || state === "loading";
@@ -28,3 +34,23 @@ export function NewTodo() {
     </>
   );
 }
+
+const action = async ({ request }) => {
+  const formData = await request.formData();
+  const title = formData.get("title");
+  if (title === "") return "Title is required";
+  await fetch("http://127.0.0.1:3000/todos/", {
+    method: "POST",
+    signal: request.signal,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title, completed: false }),
+  }).then((res) => res.json());
+  return redirect("/todos");
+};
+
+export const NewTodoRoute = {
+  action,
+  element: <NewTodo />,
+};

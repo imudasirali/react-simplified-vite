@@ -1,9 +1,23 @@
-import { Link, useLoaderData } from "react-router-dom";
+import { Form, Link, useLoaderData, useNavigation } from "react-router-dom";
 import { Post } from "../components/Post";
-import { contentLoader } from "../loaders";
+import { useEffect, useRef } from "react";
 
 function Posts() {
-  const posts = useLoaderData();
+  const {
+    posts,
+    users,
+    searchParams: { query, userId },
+  } = useLoaderData();
+  const queryRef = useRef();
+  const userRef = useRef();
+  useEffect(() => {
+    queryRef.current.value = query || "";
+  }, [query]);
+  useEffect(() => {
+    userRef.current.value = userId || "";
+  }, [userId]);
+  const { state } = useNavigation();
+  const isSubmitting = state === "submitting" || state === "loading";
   return (
     <>
       <h1 className="page-title">
@@ -14,31 +28,28 @@ function Posts() {
           </Link>
         </div>
       </h1>
-      <form method="get" action="/posts" className="form mb-4">
+      <Form method="get" className="form mb-4">
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="query">Query</label>
-            <input type="search" name="query" id="query" />
+            <input type="search" name="query" id="query" ref={queryRef} />
           </div>
           <div className="form-group">
             <label htmlFor="userId">Author</label>
-            <select type="search" name="userId" id="userId">
+            <select type="search" name="userId" id="userId" ref={userRef}>
               <option value="">Any</option>
-              <option value="1">Leanne Graham</option>
-              <option value="2">Ervin Howell</option>
-              <option value="3">Clementine Bauch</option>
-              <option value="4">Patricia Lebsack</option>
-              <option value="5">Chelsey Dietrich</option>
-              <option value="6">Mrs. Dennis Schulist</option>
-              <option value="7">Kurtis Weissnat</option>
-              <option value="8">Nicholas Runolfsdottir V</option>
-              <option value="9">Glenna Reichert</option>
-              <option value="10">Clementina DuBuque</option>
+              {users.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.name}
+                </option>
+              ))}
             </select>
           </div>
-          <button className="btn">Filter</button>
+          <button disabled={isSubmitting} className="btn">
+            {isSubmitting ? "Loading" : "Filter"}
+          </button>
         </div>
-      </form>
+      </Form>
       <div className="card-grid">
         {posts.map((post) => (
           <Post
@@ -53,13 +64,25 @@ function Posts() {
   );
 }
 
-// const loader = function loader({ request: { signal } }) {
-//   return fetch("http://127.0.0.1:3000/posts", {
-//     signal,
-//   });
-// };
+async function loader({ request: { signal, url } }) {
+  const searchParams = new URL(url).searchParams;
+  const query = searchParams.get("query") || "";
+  const userId = searchParams.get("userId") || "";
+  let postsApi = `http://127.0.0.1:3000/posts/?q=${query}`;
+  if (userId !== "") {
+    postsApi = `http://127.0.0.1:3000/posts/?q=${query}&userId=${userId}`;
+  }
+  const posts = await fetch(postsApi, {
+    signal,
+  }).then((res) => res.json());
 
-const loader = contentLoader("posts");
+  const users = fetch("http://127.0.0.1:3000/users/", {
+    signal,
+  }).then((res) => res.json());
+
+  return { posts, users: await users, searchParams: { query, userId } };
+}
+
 export const PostsRoute = {
   loader,
   element: <Posts />,

@@ -40,26 +40,17 @@ function SingleUser() {
 }
 
 async function loader({ params, request: { signal } }) {
-  const user = await fetch(
-    `https://jsonplaceholder.typicode.com/users/${params.userId}`,
-    {
-      signal,
-    }
-  ).then((res) => res.json());
+  const user = await fetch(`http://127.0.0.1:3000/users/${params.userId}`, {
+    signal,
+  }).then((res) => res.json());
 
-  const posts = fetch(
-    `https://jsonplaceholder.typicode.com/users/${params.userId}/posts`,
-    {
-      signal,
-    }
-  ).then((res) => res.json());
+  const posts = fetch(`http://127.0.0.1:3000/users/${params.userId}/posts`, {
+    signal,
+  }).then((res) => res.json());
 
-  const todos = fetch(
-    `https://jsonplaceholder.typicode.com/users/${params.userId}/todos`,
-    {
-      signal,
-    }
-  ).then((res) => res.json());
+  const todos = fetch(`http://127.0.0.1:3000/users/${params.userId}/todos`, {
+    signal,
+  }).then((res) => res.json());
 
   return { user: user, posts: await posts, todos: await todos };
 }

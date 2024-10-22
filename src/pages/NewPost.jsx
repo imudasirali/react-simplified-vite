@@ -1,43 +1,101 @@
-export function NewPost() {
+import {
+  Form,
+  Link,
+  redirect,
+  useActionData,
+  useLoaderData,
+  useNavigation,
+} from "react-router-dom";
+import { contentLoader } from "../loaders";
+
+function NewPost() {
+  const users = useLoaderData();
+  const errorMessage = useActionData();
+  const { state } = useNavigation();
+  const isSubmitting = state === "submitting" || state === "loading";
   return (
     <>
       <h1 className="page-title">New Post</h1>
-      <form method="post" action="/posts/new" className="form">
+      <Form method="post" className="form">
         <div className="form-row">
-          <div className="form-group error">
+          {console.log(errorMessage)}
+          <div
+            className={`form-group ${
+              errorMessage && errorMessage.errorTitle && "error"
+            }`}
+          >
             <label htmlFor="title">Title</label>
             <input type="text" name="title" id="title" />
-            {/* <div className="error-message">Required</div> */}
+            {errorMessage && errorMessage.errorTitle && (
+              <div className="error-message">Required</div>
+            )}
           </div>
           <div className="form-group">
             <label htmlFor="userId">Author</label>
             <select name="userId" id="userId">
-              <option value="1">Leanne Graham</option>
-              <option value="2">Ervin Howell</option>
-              <option value="3">Clementine Bauch</option>
-              <option value="4">Patricia Lebsack</option>
-              <option value="5">Chelsey Dietrich</option>
-              <option value="6">Mrs. Dennis Schulist</option>
-              <option value="7">Kurtis Weissnat</option>
-              <option value="8">Nicholas Runolfsdottir V</option>
-              <option value="9">Glenna Reichert</option>
-              <option value="10">Clementina DuBuque</option>
+              {users.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.name}
+                </option>
+              ))}
             </select>
           </div>
         </div>
         <div className="form-row">
-          <div className="form-group">
+          <div
+            className={`form-group ${
+              errorMessage && errorMessage.errorBody && "error"
+            }`}
+          >
             <label htmlFor="body">Body</label>
             <textarea name="body" id="body"></textarea>
+            {errorMessage && errorMessage.errorBody && (
+              <div className="error-message">Required</div>
+            )}
           </div>
         </div>
         <div className="form-row form-btn-row">
-          <a className="btn btn-outline" href="/posts">
+          <Link className="btn btn-outline" to="..">
             Cancel
-          </a>
-          <button className="btn">Save</button>
+          </Link>
+          <button disabled={isSubmitting} className="btn">
+            {isSubmitting ? "Loading" : "Create"}
+          </button>
         </div>
-      </form>
+      </Form>
     </>
   );
 }
+
+const action = async ({ request }) => {
+  let errors = { errorTitle: false, errorBody: false };
+  const formData = await request.formData();
+  const title = formData.get("title");
+  const userId = formData.get("userId");
+  const body = formData.get("body");
+  if (title === "") {
+    errors.errorTitle = true;
+    return errors;
+  }
+  if (body === "") {
+    errors.errorBody = true;
+    return errors;
+  }
+  await fetch("http://127.0.0.1:3000/posts/", {
+    method: "POST",
+    signal: request.signal,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId, title, body }),
+  }).then((res) => res.json());
+  return redirect("/posts");
+};
+
+const loader = contentLoader("users");
+
+export const NewPostRoute = {
+  loader,
+  action,
+  element: <NewPost />,
+};

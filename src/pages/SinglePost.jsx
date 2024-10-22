@@ -7,7 +7,7 @@ function SinglePost() {
       <h1 className="page-title">
         {singlePost.title}
         <div className="title-btns">
-          <Link className="btn btn-outline" to={`/posts/${singlePost.id}/edit`}>
+          <Link className="btn btn-outline" to={"edit"}>
             Edit
           </Link>
         </div>
@@ -33,25 +33,22 @@ function SinglePost() {
 
 async function loader({ request: { signal }, params }) {
   const singlePost = await fetch(
-    `https://jsonplaceholder.typicode.com/posts/${params.postId}`,
+    `http://127.0.0.1:3000/posts/${params.postId}`,
     {
       signal,
     }
   ).then((res) => res.json());
 
   const comments = fetch(
-    `https://jsonplaceholder.typicode.com/posts/${params.postId}/comments`,
+    `http://127.0.0.1:3000/posts/${params.postId}/comments`,
     {
       signal,
     }
   ).then((res) => res.json());
 
-  const user = await fetch(
-    `https://jsonplaceholder.typicode.com/users/${singlePost.userId}`,
-    {
-      signal,
-    }
-  ).then((res) => res.json());
+  const user = await fetch(`http://127.0.0.1:3000/users/${singlePost.userId}`, {
+    signal,
+  }).then((res) => res.json());
 
   return { singlePost, comments: await comments, user: await user };
 }
