@@ -1,15 +1,30 @@
-import { Link, useLoaderData } from "react-router-dom";
+import {
+  Form,
+  Link,
+  redirect,
+  useLoaderData,
+  useNavigation,
+} from "react-router-dom";
 function SinglePost() {
   const { singlePost, comments, user } = useLoaderData();
-  console.log(singlePost);
+  const { state } = useNavigation();
+  const isDeleting = state === "submitting" || state === "loading";
+
   return (
     <>
       <h1 className="page-title">
         {singlePost.title}
         <div className="title-btns">
-          <Link className="btn btn-outline" to={"edit"}>
-            Edit
-          </Link>
+          <div className="form-row form-btn-row">
+            <Link className="btn btn-outline" to={"edit"}>
+              Edit
+            </Link>
+            <Form method="post" className="form">
+              <button disabled={isDeleting} className="btn btn-delete">
+                {isDeleting ? "Deleting" : "Delete"}
+              </button>
+            </Form>
+          </div>
         </div>
       </h1>
       <span className="page-subtitle">
@@ -53,7 +68,16 @@ async function loader({ request: { signal }, params }) {
   return { singlePost, comments: await comments, user: await user };
 }
 
+const action = async ({ request, params }) => {
+  await fetch(`http://127.0.0.1:3000/posts/${params.postId}`, {
+    method: "DELETE",
+    signal: request.signal,
+  }).then((res) => res.json());
+  return redirect("/posts/");
+};
+
 export const SinglePostRoute = {
   loader,
+  action,
   element: <SinglePost />,
 };

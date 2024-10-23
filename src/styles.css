@@ -62,6 +62,10 @@ body {
   flex-direction: column;
 }
 
+.card-list .card {
+  margin-bottom: 2rem;
+}
+
 .card-header {
   font-size: 2rem;
   padding: var(--padding);
@@ -104,6 +108,10 @@ body {
   font-size: inherit;
   font-family: inherit;
   cursor: pointer;
+}
+
+.btn-delete {
+  background: #D11A2A ;
 }
 
 .btn:hover,
@@ -213,6 +221,11 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.form-layout select {
+  width: max-content;
+  margin-bottom: 2rem;
 }
 
 .form-row {

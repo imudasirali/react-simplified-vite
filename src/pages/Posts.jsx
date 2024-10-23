@@ -1,6 +1,7 @@
 import { Form, Link, useLoaderData, useNavigation } from "react-router-dom";
 import { Post } from "../components/Post";
 import { useEffect, useRef } from "react";
+import { Layout } from "../components/Layout";
 
 function Posts() {
   const {
@@ -18,6 +19,7 @@ function Posts() {
   }, [userId]);
   const { state } = useNavigation();
   const isSubmitting = state === "submitting" || state === "loading";
+  const featuredPick = Math.floor(Math.random() * posts.length);
   return (
     <>
       <h1 className="page-title">
@@ -28,6 +30,17 @@ function Posts() {
           </Link>
         </div>
       </h1>
+      {posts.length !== 0 && (
+        <div className="mt-4 mb-4">
+          <h2>Editor's Pick</h2>
+          <Post
+            id={posts[featuredPick].id}
+            title={posts[featuredPick].title}
+            body={posts[featuredPick].body}
+          />
+        </div>
+      )}
+
       <Form method="get" className="form mb-4">
         <div className="form-row">
           <div className="form-group">
@@ -50,7 +63,7 @@ function Posts() {
           </button>
         </div>
       </Form>
-      <div className="card-grid">
+      <Layout items={posts.length}>
         {posts.map((post) => (
           <Post
             key={post.id}
@@ -59,7 +72,7 @@ function Posts() {
             body={post.body}
           />
         ))}
-      </div>
+      </Layout>
     </>
   );
 }

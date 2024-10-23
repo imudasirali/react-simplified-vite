@@ -1,13 +1,14 @@
 import { useLoaderData } from "react-router-dom";
 import { User } from "../components/User";
 import { contentLoader } from "../loaders";
+import { Layout } from "../components/Layout";
 
 function Users() {
   const users = useLoaderData();
   return (
     <>
       <h1 className="page-title">Users</h1>
-      <div className="card-grid">
+      <Layout items={users.length}>
         {users.map((user) => (
           <User
             key={user.id}
@@ -18,7 +19,7 @@ function Users() {
             email={user.email}
           />
         ))}
-      </div>
+      </Layout>
     </>
   );
 }

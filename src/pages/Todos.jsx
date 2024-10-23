@@ -23,7 +23,7 @@ function Todos() {
           </Link>
         </div>
       </h1>
-      <Form className="form">
+      <Form className="form mb-4">
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="query">Search</label>
@@ -34,6 +34,7 @@ function Todos() {
           </button>
         </div>
       </Form>
+      <span>{todos.length} items</span>
       <ul>
         {todos.map((todo) => (
           <TodoItem key={todo.id} {...todo} />
